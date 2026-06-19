@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <RadioGroup
+        android:id="@+id/rgType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        <RadioButton android:id="@+id/rbThu" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Khoản Thu" android:checked="true" android:layout_weight="1"/>
+        <RadioButton android:id="@+id/rbChi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Khoản Chi" android:layout_weight="1"/>
+    </RadioGroup>
+
+    <EditText android:id="@+id/etTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:hint="Tiêu đề giao dịch" android:layout_marginBottom="8dp"/>
+    <EditText android:id="@+id/etAmount" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:hint="Số tiền" android:inputType="numberDecimal" android:layout_marginBottom="8dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Danh mục:" android:textStyle="bold"/>
+    <Spinner android:id="@+id/spCategory" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginBottom="8dp"/>
+
+    <EditText android:id="@+id/etDate" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:hint="Ngày (YYYY-MM-DD)" android:layout_marginBottom="8dp"/>
+    <EditText android:id="@+id/etNote" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:hint="Ghi chú thêm" android:layout_marginBottom="8dp"/>
+</LinearLayout>
