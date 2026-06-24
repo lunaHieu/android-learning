@@ -1,13 +1,16 @@
 {
   "folders": [
     {
-      "path": ".",
-    },
-    {
+      "name": "KiemTra_NguyenVanHieu",
       "path": "../KiemTra_NguyenVanHieu",
     },
     {
+      "name": "kiemtra3",
       "path": "../kiemtra3",
+    },
+    {
+      "name": "Ktra2_NguyenVanHieu",
+      "path": ".",
     },
   ],
   "settings": {},
