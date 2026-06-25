@@ -12,6 +12,9 @@
       "name": "Ktra2_NguyenVanHieu",
       "path": ".",
     },
+    {
+      "path": "../lab05_b1_VanHieu",
+    },
   ],
   "settings": {},
 }
