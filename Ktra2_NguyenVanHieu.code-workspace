@@ -9,10 +9,15 @@
       "path": "../kiemtra3",
     },
     {
+      "name": "Lab07_nguyenvanhieu",
+      "path": "../Lab07_nguyenvanhieu",
+    },
+    {
       "name": "Ktra2_NguyenVanHieu",
       "path": ".",
     },
     {
+      "name": "lab05_b1_VanHieu",
       "path": "../lab05_b1_VanHieu",
     },
   ],
