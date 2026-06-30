@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <Button
+        android:id="@+id/buttonPick"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="1. CHỌN NHIỀU BÀI HÁT TỪ MÁY"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:backgroundTint="#2196F3"/>
+
+    <TextView
+        android:id="@+id/tvSongName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Chưa có bài hát nào"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#FF5722"
+        android:gravity="center"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/buttonPrev"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="70dp"
+            android:text="Pre"
+            android:textSize="24sp"
+            android:backgroundTint="#9E9E9E"/>
+
+        <Button
+            android:id="@+id/buttonStartPause"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="70dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Pause"
+            android:textSize="28sp"
+            android:backgroundTint="#4CAF50"/>
+
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="70dp"
+            android:text="Next"
+            android:textSize="24sp"
+            android:backgroundTint="#9E9E9E"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonStop"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="24dp"
+        android:text="DỪNG HẲN ỨNG DỤNG"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:backgroundTint="#F44336"/>
+
+</LinearLayout>
