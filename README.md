@@ -8,3 +8,4 @@ Các bài thực hành Android bằng Java:
 - SQLite
 - SharedPreferences
 - Networking API
+  test
