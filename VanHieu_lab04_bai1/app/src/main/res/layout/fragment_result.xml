@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    android:background="#FFFFFF"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="KẾT QUẢ HỌC TẬP"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#1976D2"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:id="@+id/textViewMaSinhVien"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Mã SV: ..."
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/textViewHoTen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Họ tên: ..."
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/textViewDiemToan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="Toán: ..."/>
+
+    <TextView
+        android:id="@+id/textViewDiemLy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="Lý: ..."/>
+
+    <TextView
+        android:id="@+id/textViewDiemHoa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="Hóa: ..."
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:id="@+id/textViewDiemTrungBinh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#009688"
+        android:text="Điểm TB: ..."/>
+
+    <TextView
+        android:id="@+id/textViewXepLoai"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#F44336"
+        android:text="Xếp loại: ..."
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/buttonQuayLai"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Quay lại (Restart)"
+        android:backgroundTint="#FF5722"
+        android:textColor="#FFFFFF"/>
+
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    android:background="#FFFFFF"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NHẬP ĐIỂM"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#1976D2"
+        android:layout_marginBottom="32dp"/>
+
+    <EditText
+        android:id="@+id/editTextDiemToan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:hint="Điểm Toán"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNext"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextDiemLy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:hint="Điểm Lý"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNext"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextDiemHoa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:hint="Điểm Hóa"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionDone"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/buttonTinhDiem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tính điểm (Calculate)"
+        android:backgroundTint="#1976D2"
+        android:textColor="#FFFFFF"/>
+
+</LinearLayout>
