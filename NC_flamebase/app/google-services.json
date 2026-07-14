@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "495658059222",
+    "firebase_url": "https://vanhieu-android-default-rtdb.firebaseio.com",
+    "project_id": "vanhieu-android",
+    "storage_bucket": "vanhieu-android.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495658059222:android:291734f6863a800e35d077",
+        "android_client_info": {
+          "package_name": "hieu.nv.nc_flamebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPRVTNWPoo73D_Y1PrI-vlmzOQXQ8Lj60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
