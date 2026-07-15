@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/edt_dlg_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mã số đề tài (Ví dụ: DT03)"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/edt_dlg_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên đề tài nghiên cứu"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_dlg_host"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Họ tên chủ nhiệm đề tài"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_dlg_budget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Kinh phí dự toán (VND)"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_dlg_year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Năm thực hiện (Ví dụ: 2026)"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_dlg_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Kết quả nghiệm thu (Xuất sắc/Đạt/Chưa)"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp"/>
+</LinearLayout>

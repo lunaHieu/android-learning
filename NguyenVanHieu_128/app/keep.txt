@@ -1,0 +1,321 @@
+PHẦN 1: TẦNG DỮ LIỆU CỐT LÕI (SQLITE DATABASE)
+Đây là nơi lưu trữ toàn bộ thông tin đề tài nghiên cứu khoa học. Giảng viên rất thích hỏi vào file TopicDBHelper.java.
+
+1. Tại sao lại dùng SQLiteOpenHelper?
+Bản chất: Là một class có sẵn của thư viện Android giúp ta quản lý việc tạo mới (Create) và nâng cấp (Update) cơ sở dữ liệu dạng bảng ngay trong bộ nhớ của điện thoại.
+
+Hàm onCreate(): Chỉ chạy đúng một lần duy nhất khi ứng dụng được cài đặt lần đầu tiên trên thiết bị. Nhiệm vụ của nó là thực thi câu lệnh CREATE TABLE để dựng khung các cột dữ liệu.
+
+Hàm onUpgrade(): Chỉ chạy khi ta thay đổi số phiên bản cấu trúc (biến DB_VERSION). Nó giúp xóa bảng cũ (DROP TABLE IF EXISTS) để cập nhật cấu trúc cột mới mà không làm treo app người dùng.
+
+2. Sự khác biệt giữa getWritableDatabase() và getReadableDatabase()
+getWritableDatabase(): Mở luồng cơ sở dữ liệu có quyền Ghi / Sửa / Xóa. Dùng cho các hàm insert, update, delete.
+
+getReadableDatabase(): Mở luồng cơ sở dữ liệu chỉ có quyền Đọc. Dùng khi ta truy vấn danh sách (SELECT) đổ lên màn hình để tối ưu hóa bộ nhớ và tăng tốc độ app.
+
+3. Đối tượng ContentValues và Cursor là gì?
+ContentValues: Bản chất là một cái kho lưu trữ dữ liệu theo cặp Key - Value (Tên cột - Giá trị của cột). Ta dùng nó để gom gói dữ liệu học sinh/đề tài trước khi đẩy xuống lệnh chèn của SQLite.
+
+Cursor: Là đối tượng Con trỏ. Khi ta chạy lệnh rawQuery (SELECT), SQLite trả về một tập hợp dữ liệu. Con trỏ Cursor sẽ đứng ở dòng đầu tiên, lệnh moveToNext() giống như việc dịch con trỏ xuống từng dòng tiếp theo để ta bóc tách dữ liệu bỏ vào mảng List<Model>.
+
+🎨 PHẦN 2: TẦNG HIỂN THỊ DANH SÁCH (RECYCLERVIEW & ADAPTER)
+RecyclerView là thành phần nâng cấp của ListView cũ, giúp hiển thị hàng ngàn dòng dữ liệu mượt mà mà không lo tốn pin hay giật lag máy.
+
+1. Tại sao RecyclerView lại mượt hơn ListView cũ?
+Bản chất: Cơ chế Tái sử dụng (Recycle). Nếu danh sách có 1000 đề tài, ListView cũ sẽ tạo ra đúng 1000 ô giao diện (gây tràn bộ nhớ). RecyclerView thì khác, nó chỉ tạo khoảng 7-10 ô giao diện vừa vặn khít màn hình. Khi bạn cuộn ngón tay đi lên, ô trên cùng biến mất sẽ không bị xóa đi, mà lõi code sẽ giữ nguyên cái khung đó, chỉ thay ruột dữ liệu của ô thứ 11 vào (gọi là cơ chế tái sử dụng View).
+
+2. Vai trò của Class ViewHolder là gì?
+Là thành phần bắt buộc của RecyclerView để áp dụng mô hình lưu giữ giao diện. Nó chịu trách nhiệm gọi lệnh findViewById một lần duy nhất để ánh xạ các text hiển thị (txtTitle, txtHost). Khi cuộn danh sách, hệ thống không phải tốn công đi tìm lại các ID này nữa, giúp app mượt mà tuyệt đối.
+
+3. Bản chất 3 hàm bắt buộc trong Adapter
+onCreateViewHolder(): Nạp file giao diện dòng (item_topic.xml) từ dạng file tĩnh XML thành một đối tượng View trong code Java, sau đó nạp vào ViewHolder.
+
+onBindViewHolder(): Hàm Đổ dữ liệu và Bắt sự kiện. Tại đây, ta lấy đối tượng ở vị trí position trong mảng để set chữ hiển thị, đổi màu sắc cảnh báo theo điều kiện, và bắt sự kiện setOnClickListener khi người dùng chạm tay vào dòng đó.
+
+getItemCount(): Báo cho hệ thống biết mảng dữ liệu đang có bao nhiêu phần tử để RecyclerView vẽ đúng số lượng ô tương ứng.
+
+🕹️ PHẦN 3: LUỒNG ĐIỀU KHIỂN & SỰ KIỆN (MAINACTIVITY)
+MainActivity đóng vai trò như một vị "Tổng tư lệnh", điều phối luồng chạy của toàn bộ ứng dụng.
+
+1. Hàm notifyDataSetChanged() dùng để làm gì?
+Trả lời: Khi ta thực hiện thêm, sửa hoặc xóa một đề tài xuống SQLite, mảng dữ liệu List trong code Java đã bị thay đổi. Ta gọi adapter.notifyDataSetChanged() để phát một tín hiệu thông báo cho RecyclerView biết: "Dữ liệu gốc đã thay đổi rồi, hãy tự động vẽ lại giao diện mới ngay lập tức đi!".
+
+2. Lệnh LayoutInflater.from(context).inflate() là gì?
+Bình thường file giao diện XML chỉ là file chữ tĩnh. Khi muốn hiển thị một Hộp thoại AlertDialog hoặc một dòng phần tử, ta dùng LayoutInflater để "bơm căng" (biến đổi) file XML đó thành một đối tượng View thực tế chạy được trong mã nguồn Java.
+
+📡 PHẦN 4: LIÊN KẾT HỆ THỐNG (INTENT ẨN - CHIA SẺ & GỬI EMAIL)
+Các bài toán từ dạng 10 đến dạng 12 bắt buộc dùng tính năng gửi thư điện tử Gmail thông báo lịch họp, báo điểm.
+
+1. Sự khác biệt giữa Intent tường minh (Explicit Intent) và Intent ẩn (Implicit Intent)
+Intent tường minh: Chỉ rõ đích danh tên Class muốn mở (Ví dụ: new Intent(MainActivity.this, SubActivity.class)). Dùng để chuyển màn hình qua lại trong cùng 1 app.
+
+Intent ẩn (Implicit Intent): Không chỉ định rõ app nào sẽ mở, mà chỉ đưa ra Hành động (Action) và Dữ liệu (Data/Uri) (Ví dụ: ACTION_SENDTO, mailto:). Hệ điều hành Android nhận lệnh này sẽ tự quét toàn bộ máy xem máy có ứng dụng nào đáp ứng được (như Gmail, Outlook) rồi bung lên cho người dùng chọn.
+
+💡 MẸO "VÀNG" ĐỂ TRẢ LỜI TỰ TIN:
+Nếu bị thầy cô hỏi khó ở các dòng xử lý toán học hoặc so sánh, bạn cứ bám sát câu thần chú:
+
+"Em thiết kế ứng dụng theo mô hình tách biệt cấu trúc dữ liệu (Model) và logic xử lý dữ liệu (Database/Adapter). Mọi dữ liệu đều được kiểm tra điều kiện chặt chẽ (Validation) trước khi thực thi lệnh ghi xuống SQLite nhằm tránh lỗi tràn bộ nhớ hoặc rò rỉ dữ liệu hệ thống (Memory Leak) ạ!"
+
+
+1. Hàm Khởi Tạo Bảng Dữ Liệu (onCreate)Hàm này nằm trong file TopicDBHelper.java, chịu trách nhiệm dựng khung hệ thống lưu trữ.Java@Override
+public void onCreate(SQLiteDatabase db) {
+    db.execSQL("CREATE TABLE topics (id TEXT PRIMARY KEY, title TEXT, host TEXT, budget REAL, year INTEGER, result TEXT)");
+    db.execSQL("INSERT INTO topics VALUES ('DT01', 'Nghiên cứu không gian MCDM Lao Cai', 'Nguyễn Văn Hiếu', 50000000, 2026, 'Xuất sắc')");
+}
+Giải thích rõ: * Hàm này nhận vào đối tượng SQLiteDatabase db (đại diện cho file cơ sở dữ liệu trên điện thoại) và gọi lệnh db.execSQL() để thực thi câu lệnh SQL thuần.id TEXT PRIMARY KEY: Khai báo cột id là kiểu chuỗi và đặt làm Khóa chính, đảm bảo các đề tài không bao giờ bị trùng mã với nhau.Các hàm INSERT INTO phía dưới gọi là Seed Data (Dữ liệu mồi), giúp ứng dụng có sẵn dữ liệu chạy thử ngay khi vừa cài đặt mà không bắt người dùng phải nhập tay từ đầu.2. Hàm Quét Và Đọc Dữ Liệu Từ SQLite (getAllTopics)Hàm này chịu trách nhiệm bốc toàn bộ dữ liệu từ bộ nhớ điện thoại lên để chuẩn bị đổ ra màn hình.Javapublic List<TopicModel> getAllTopics() {
+    List<TopicModel> list = new ArrayList<>();
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor c = db.rawQuery("SELECT * FROM topics ORDER BY year DESC", null);
+    if (c.moveToFirst()) {
+        do {
+            list.add(new TopicModel(c.getString(0), c.getString(1), c.getString(2), c.getDouble(3), c.getInt(4), c.getString(5)));
+        } while (c.moveToNext());
+    }
+    c.close();
+    return list;
+}
+Giải thích rõ:this.getReadableDatabase(): Xin hệ thống cấp quyền Chỉ đọc để tối ưu tốc độ và tiết kiệm bộ nhớ ram.db.rawQuery(): Bắn câu lệnh truy vấn SQL có cấu trúc ORDER BY year DESC để SQLite tự động sắp xếp các đề tài theo năm thực hiện từ mới nhất đến cũ nhất.Cursor c: Đối tượng Con trỏ bản ghi. Khi câu lệnh SELECT chạy xong, dữ liệu trả về dạng một bảng ảo, con trỏ c sẽ đứng ở dòng đầu tiên (moveToFirst).Vòng lặp do...while (c.moveToNext()): Ép con trỏ dịch chuyển tuần tự xuống từng dòng tiếp theo. Tại mỗi dòng, ta dùng c.getString() hoặc c.getInt() dựa theo vị trí index của cột (0, 1, 2...) để bốc dữ liệu ra, đóng gói vào đối tượng TopicModel rồi nhét vào mảng list.c.close(): Bắt buộc phải có để đóng con trỏ sau khi quét xong, tránh lỗi rò rỉ bộ nhớ (Memory Leak) làm đơ máy.3. Hàm Tìm Kiếm Nâng Cao Song Song (searchTopics)Hàm xử lý yêu cầu Câu 3 của đề bài: Tìm kiếm đề tài theo Tên chủ nhiệm HOẶC Năm thực hiện.Javapublic List<TopicModel> searchTopics(String keyword) {
+    String query = "SELECT * FROM topics WHERE host LIKE ? OR year = ?";
+    return getTopicsByQuery(query, new String[]{"%" + keyword + "%", keyword});
+}
+Giải thích rõ:Mẫu chốt ăn điểm ở đây là sử dụng toán tử LIKE kết hợp với ký tự đại diện %. Nó cho phép tìm kiếm tương đối (gần đúng). Ví dụ: Người dùng chỉ cần gõ chữ "Hiếu", hệ thống vẫn quét trúng "Nguyễn Văn Hiếu".Toán tử OR liên kết hai mệnh đề: Chỉ cần cột host khớp một phần hoặc cột year khớp chính xác với chuỗi keyword người dùng gõ, dòng dữ liệu đó sẽ được bốc lên ngay lập tức.Mảng new String[]{...} ở vế sau dùng để truyền tham số an toàn vào vị trí các dấu chấm hỏi ?, giúp ứng dụng chống lại lỗi bảo mật tấn công SQL Injection.4. Hàm Liên Kết Và Đổ Dữ Liệu Ra Giao Diện (onBindViewHolder)Hàm này nằm trong file TopicAdapter.java, là trái tim điều khiển hiển thị của RecyclerView.Java@Override
+public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    TopicModel m = list.get(position);
+    holder.txtTitle.setText(m.getId() + ": " + m.getTitle());
+
+    String res = m.getResult().toLowerCase();
+    if (res.contains("xuất sắc")) {
+        holder.txtResult.setTextColor(0xFFD32F2F);
+    }
+
+    holder.itemView.setOnClickListener(v -> listener.onTopicClick(m));
+}
+Giải thích rõ:Hàm này được RecyclerView tự động gọi liên tục khi người dùng cuộn màn hình. Hệ thống truyền vào một biến position (vị trí của dòng hiện tại).list.get(position): Lấy ra đúng thực thể đề tài nằm ở vị trí đó trong mảng.holder.txtTitle.setText(): Đổ dữ liệu chữ vào các TextView đã được ánh xạ sẵn thông qua đối tượng ViewHolder để tránh phải gọi lại lệnh findViewById gây chậm app.holder.itemView.setOnClickListener: Bắt sự kiện chạm tay của người dùng vào toàn bộ vùng bề mặt của dòng đó để kích hoạt hàm onTopicClick(m), chuyển tiếp đối tượng sang màn hình sửa/xóa.5. Hàm Điều Phối Hộp Thoại Đa Năng (showTopicDialog)Hàm nằm trong MainActivity.java, gộp chung cả 3 luồng xử lý: Thêm mới, Cập nhật và Xóa.Javaif (existingModel != null) {
+    builder.setTitle("Cập nhật đề tài khoa học");
+    edtId.setText(existingModel.getId());
+    edtId.setEnabled(false);
+}
+Giải thích rõ:Hàm này nhận vào tham số TopicModel existingModel. Đây là tư duy lập trình tối ưu hóa code:Nếu existingModel == null, ứng dụng hiểu là người dùng đang bấm nút thêm mới $\rightarrow$ Hiện hộp thoại trống rỗng.Nếu existingModel != null, ứng dụng hiểu là người dùng vừa click vào một dòng có sẵn trên danh sách $\rightarrow$ Tự động bốc toàn bộ dữ liệu cũ điền ngược vào các ô EditText để họ sửa.edtId.setEnabled(false): Mẹo lập trình cực hay. Khóa ô nhập Mã đề tài lại không cho người dùng sửa ở chế độ cập nhật, vì id là Khóa chính (Primary Key) dùng làm mốc định vị trong SQLite, nếu sửa khóa chính sẽ gây lỗi mất toàn vẹn dữ liệu.
+
+
+. THƯ MỤC JAVA (LOGIC XỬ LÝ)
+📄 model/TopicModel.java (Lớp đối tượng dữ liệu)
+Chức năng: Định nghĩa cấu trúc của một đề tài nghiên cứu khoa học dưới dạng một đối tượng (Object) trong Java.
+
+Giải thích rõ: File này chứa các biến đại diện cho các trường thông tin của đề tài (id, title, host, budget, year, result) cùng với hàm khởi tạo (Constructor) và các hàm lấy dữ liệu (get). Nó đóng vai trò là chiếc "hộp đóng gói" dữ liệu, giúp gom các thông tin thô từ SQLite thành một thực thể duy nhất để dễ dàng truyền tải qua lại giữa Database, MainActivity và Adapter.
+
+📄 database/TopicDBHelper.java (Quản trị cơ sở dữ liệu)
+Chức năng: Trực tiếp làm việc với hệ quản trị cơ sở dữ liệu SQLite thu nhỏ nằm trong điện thoại.
+
+Giải thích rõ: Đây là đầu mối xử lý mọi lệnh truy vấn dữ liệu. File này chịu trách nhiệm:
+
+Khởi tạo file database và dựng khung bảng topics bằng mã SQL thuần (onCreate).
+
+Thực thi các hàm nghiệp vụ CRUD: Thêm mới (insertTopic), Cập nhật (updateTopic), Xóa bỏ (deleteTopic).
+
+Thực thi thuật toán tìm kiếm tương đối (LIKE %) và lọc dữ liệu song song phục vụ Câu 3 của đề bài.
+
+📄 ui/TopicAdapter.java (Bộ cầu nối và tái sử dụng giao diện)
+Chức năng: Đóng vai trò là chiếc "cầu nối" trung gian, chuyển đổi mảng dữ liệu Java (List<TopicModel>) thành các ô giao diện hiển thị trực quan trên màn hình.
+
+Giải thích rõ: Bộ máy RecyclerView không thể tự đọc hiểu mảng dữ liệu. Adapter sẽ đứng ra bóc tách mảng đó, nạp file layout dòng (item_topic.xml), đổ chữ vào đúng các TextView, tự động tính toán đổi màu sắc chữ để cảnh báo nghiệm thu, và bắt sự kiện người dùng chạm tay click vào từng dòng đề tài.
+
+📄 ui/MainActivity.java (Trình điều khiển trung tâm)
+Chức năng: Là bộ não điều hành cao nhất, quản lý vòng đời hoạt động của màn hình chính và điều phối các thành phần khác.
+
+Giải thích rõ: File này chịu trách nhiệm khởi tạo ứng dụng, gọi TopicDBHelper để lấy dữ liệu, nạp dữ liệu vào TopicAdapter để vẽ lên màn hình. Đồng thời, nó bắt các sự kiện click nút bấm trên màn hình chính để bung hộp thoại nhập liệu (AlertDialog), thu thập dữ liệu người dùng gõ từ các ô EditText rồi ra lệnh cho Database lưu kho hoặc tìm kiếm.
+
+🎨 2. THƯ MỤC RES/LAYOUT (GIAO DIỆN XML)
+📄 layout/activity_main.xml (Cấu trúc màn hình chính)
+Chức năng: Định nghĩa toàn bộ bộ khung giao diện tĩnh của màn hình ứng dụng khi vừa mở lên.
+
+Giải thích rõ: Sử dụng cấu trúc RelativeLayout để sắp xếp các thành phần: Thanh nhập từ khóa tìm kiếm và nút TÌM cố định ở trên cùng, nút THÊM ĐỀ TÀI nằm cố định ở đáy màn hình, và vùng không gian rộng lớn ở giữa dành trọn cho RecyclerView để cuộn danh sách.
+
+📄 layout/item_topic.xml (Thiết kế dòng danh sách)
+Chức năng: Định nghĩa kiến trúc giao diện cho duy nhất một dòng đề tài đơn lẻ.
+
+Giải thích rõ: Sử dụng thẻ CardView bo tròn góc tạo hiệu ứng nổi khối đổ bóng hiện đại. Bên trong chứa 3 tầng TextView xếp dọc để hiển thị: Tiêu đề đề tài (chữ to đậm), Thông tin chủ nhiệm/kinh phí (chữ nhỏ xám) và Nhãn trạng thái nghiệm thu (nằm góc dưới để Adapter ép đổi màu sắc).
+
+📄 layout/dialog_topic.xml (Giao diện hộp thoại nhập liệu)
+Chức năng: Định nghĩa giao diện cho cửa sổ Pop-up hiện lên giữa màn hình khi người dùng muốn Thêm hoặc Sửa thông tin.
+
+Giải thích rõ: Sử dụng LinearLayout dạng dọc xếp chồng các ô nhập liệu EditText từ trên xuống dưới, tương ứng với các trường dữ liệu bắt buộc của đề bài như: Mã số, Tên đề tài, Chủ nhiệm, Kinh phí, Năm và Kết quả.
+
+⚙️ 3. SƠ ĐỒ PHỐI HỢP GIỮA CÁC FILE
+Khi bạn bấm vào nút "TÌM" trên ứng dụng, luồng đi của hệ thống qua các file sẽ chạy theo đúng chu trình khép kín sau:
+
+activity_main.xml tiếp nhận sự kiện click của bạn.
+
+MainActivity.java bốc chuỗi chữ bạn vừa gõ ở ô tìm kiếm, gọi hàm searchTopics(keyword) của file TopicDBHelper.java.
+
+TopicDBHelper.java truy vấn SQLite, đóng gói kết quả tìm được vào các đối tượng TopicModel.java rồi trả về một mảng List.
+
+MainActivity.java nhận mảng đó, nhét vào file TopicAdapter.java.
+
+TopicAdapter.java lấy dữ liệu đổ vào file item_topic.xml để cập nhật hiển thị ra màn hình cho bạn nhìn thấy kết quả.
+
+Để nắm chắc điểm tối đa, chúng ta sẽ mổ xẻ thật sâu vào hai "trụ cột" quan trọng nhất của dự án là **`TopicDBHelper.java` (Tầng Dữ Liệu)** và **`MainActivity.java` (Tình Điều Khiển Trung Tâm)**.
+
+Đây là hai file chứa toàn bộ thuật toán của bài thi mà giảng viên chắc chắn sẽ bắt bạn giải trình từng dòng code.
+
+---
+
+## 💾 PHẦN 1: ĐI SÂU VÀO `TopicDBHelper.java` (SQLITE DATABASE)
+
+Bản chất của file này là một chiếc **Cầu nối phần cứng**, giúp code Java nói chuyện được với hệ quản trị cơ sở dữ liệu SQLite nằm trong hệ điều hành Android.
+
+### 1. Luồng chạy của Hàm Khởi Tạo `onCreate`
+
+Khi người dùng ấn cài đặt ứng dụng lần đầu tiên, hệ điều hành Android sẽ cấp một khoảng không gian nhớ sandbox cho app. Lúc này, hàm `onCreate(SQLiteDatabase db)` được gọi:
+
+* Nó thực thi câu lệnh SQL: `CREATE TABLE topics (...)`.
+* **Cú pháp khóa chính `id TEXT PRIMARY KEY`:** Có nghĩa là trường `id` sẽ được lập chỉ mục (Index). Khi hệ thống thực hiện tìm kiếm hoặc sửa xóa, SQLite sẽ định vị dòng đó bằng thuật toán cây tìm kiếm nhị phân thông qua mã `id` này, giúp tốc độ truy vết đạt $O(\log n)$ thay vì phải quét tuần tự từ đầu đến cuối bảng $O(n)$.
+
+### 2. Bản chất thuật toán Đọc và Đóng gói dữ liệu (`getAllTopics`)
+
+Hàm này sử dụng một vòng lặp vạn năng để gom dữ liệu thô thành đối tượng Java:
+
+```java
+Cursor c = db.rawQuery("SELECT * FROM topics ORDER BY year DESC", null);
+
+```
+
+* **Bản chất của con trỏ `Cursor`:** Bạn hãy tưởng tượng bảng dữ liệu trong SQLite giống như một file Excel. `Cursor` chính là con trỏ chuột. Khi câu lệnh SELECT thực thi xong, con trỏ chuột này đang nằm ở **vùng tiêu đề cột** (Dòng số 0).
+* `c.moveToFirst()`: Di chuyển con trỏ chuột xuống **dòng dữ liệu đầu tiên** (Dòng số 1). Nếu bảng rỗng không có dữ liệu, hàm này trả về `false` và vòng lặp không chạy.
+* Vòng lặp `do { ... } while (c.moveToNext())`:
+* Trong thân vòng lặp, lệnh `c.getString(0)` sẽ bốc chuỗi ở cột số 0 (Mã đề tài), `c.getString(1)` bốc tên đề tài... Các dữ liệu rời rạc này được nạp vào hàm khởi tạo `new TopicModel(...)` để tạo thành một thực thể object nguyên khối.
+* Sau khi đóng gói xong dòng 1, lệnh `c.moveToNext()` ở cuối vế `while` sẽ đẩy con trỏ chuột xuống dòng số 2. Quá trình này lặp lại liên tục cho đến khi hết sạch các dòng, con trỏ trả về `false` và vòng lặp kết thúc.
+
+
+
+### 3. Thuật toán Tìm kiếm tương đối song song (`searchTopics`)
+
+```java
+String query = "SELECT * FROM topics WHERE host LIKE ? OR year = ?";
+
+```
+
+* Bộ lọc sử dụng tham số toán tử `LIKE` kết hợp chuỗi `"%keyword%"`. Ký tự `%` đóng vai trò là ký tự đại diện (Wildcard). Nghĩa là hệ thống chấp nhận có ký tự lạ đứng trước và đứng sau từ khóa, giúp tìm kiếm theo cơ chế **Chứa từ khóa** chứ không bắt buộc phải gõ chính xác 100%.
+* Mệnh đề `OR` đảm bảo tính đa năng: Khi người dùng gõ chuỗi *"2026"*, mệnh đề thứ nhất vấp (`host` không khớp), nhưng mệnh đề thứ hai `year = 2026` sẽ khớp và bốc đề tài lên thành công.
+
+---
+
+## 🕹️ PHẦN 2: ĐI SÂU VÀO `MainActivity.java` (ĐIỀU KHIỂN TRUNG TÂM)
+
+MainActivity đóng vai trò như một **vị Tổng tư lệnh** đứng ở giữa. Nó không trực tiếp lưu dữ liệu (việc của DB) và không trực tiếp vẽ giao diện (việc của Adapter), nó là đứa ra lệnh và kết nối hai bên.
+
+### 1. Sơ đồ cơ chế hoạt động điều phối của MainActivity:
+
+### 2. Bản chất luồng nạp và làm mới dữ liệu (`loadAllData`)
+
+```java
+private void loadAllData() {
+    topicList.clear();
+    topicList.addAll(dbHelper.getAllTopics());
+    adapter.notifyDataSetChanged();
+}
+
+```
+
+Mỗi khi Thêm, Sửa hoặc Xóa thành công, MainActivity **bắt buộc phải chạy lại 3 dòng này**:
+
+* `topicList.clear()`: Xóa sạch các đối tượng cũ đang lưu trong bộ nhớ tạm của mảng Java để tránh việc dữ liệu mới xếp chồng lên dữ liệu cũ gây trùng lặp giao diện.
+* `topicList.addAll(...)`: Đóng vai trò nạp năng lượng mới, gọi Database quét lại SQLite từ đầu và đổ toàn bộ danh sách mới vào mảng.
+* `adapter.notifyDataSetChanged()`: Bắn một lệnh kích hoạt (Event Trigger) sang file `TopicAdapter.java`. Nhận được lệnh này, Adapter sẽ ép RecyclerView phá hủy toàn bộ các ô View cũ trên màn hình và chạy lại hàm `onBindViewHolder` để vẽ lại giao diện mới cập nhật.
+
+### 3. Cơ chế xử lý Hộp thoại đa năng (`showTopicDialog`)
+
+Hàm này thể hiện tư duy lập trình tối ưu hóa mã nguồn thông qua kỹ thuật **Kiểm tra cờ trạng thái (`Flag Check`)**:
+
+```java
+if (existingModel != null) { ... }
+
+```
+
+MainActivity sử dụng chính biến `existingModel` để phân biệt hành vi người dùng:
+
+* **Luồng 1 (Thêm mới):** Nếu biến truyền vào là `null`, MainActivity lệnh cho `AlertDialog` mở một form trống, và gán sự kiện cho nút Lưu là: Gọi hàm `dbHelper.insertTopic()`.
+* **Luồng 2 (Cập nhật / Xóa):** Nếu biến truyền vào có thực thể (do người dùng click vào 1 dòng trên danh sách), MainActivity bốc dữ liệu cũ đập vào các ô `EditText`. Đồng thời:
+* Khóa ô nhập mã: `edtId.setEnabled(false)` để bảo vệ toàn vẹn dữ liệu khóa chính của SQLite.
+* Kích hoạt nút bấm thứ 3 là **Xóa**: Gán sự kiện gọi hàm `dbHelper.deleteTopic()`.
+
+
+
+---
+
+## 🗣️ CÁCH DIỄN ĐẠT "ĂN ĐIỂM" TUYỆT ĐỐI TRƯỚC GIẢNG VIÊN:
+
+Khi giảng viên chỉ tay vào màn hình hỏi về luồng xử lý, bạn hãy tự tin trả lời theo mạch logic sau:
+
+> *"Thưa thầy/cô, kiến trúc ứng dụng của em được xây dựng theo nguyên lý **hướng sự kiện (Event-Driven)** và **phân tách trách nhiệm (Separation of Concerns)**.
+> File **`TopicDBHelper`** nắm giữ toàn bộ quyền năng về cấu trúc dữ liệu và thuật toán tìm kiếm dưới tầng vật lý SQLite. Trong khi đó, **`MainActivity`** đóng vai trò điều phối vòng đời ứng dụng, lắng nghe các tương tác của người dùng từ giao diện XML, sau đó ra lệnh cho Database thực thi dữ liệu ngầm và đẩy tín hiệu sang Adapter để đồng bộ hiển thị lên màn hình theo thời gian thực ạ!"*
+
+
+LUỒNG 1: KHỞI CHẠY ỨNG DỤNG VÀ NẠP DANH SÁCH (READ LUỒNG)Đây là luồng tự động kích hoạt ngay khi bạn vừa bấm mở icon app trên màn hình điện thoại.Bước 1 (AndroidManifest.xml): Hệ điều hành Android đọc file cấu hình Manifest, xác định MainActivity là màn hình khởi chạy đầu tiên (LAUNCHER).Bước 2 (MainActivity.java $\rightarrow$ onCreate): Màn hình chính mở lên, nạp giao diện tĩnh activity_main.xml. Tại đây, lệnh dbHelper = new TopicDBHelper(this); được chạy để thiết lập kết nối xuống file cơ sở dữ liệu.Bước 3 (TopicDBHelper.java $\rightarrow$ getAllTopics): MainActivity ra lệnh cho Database quét bảng: SELECT * FROM topics ORDER BY year DESC. Con trỏ Cursor bốc dữ liệu thô từng dòng, đóng gói thành danh sách mảng List<TopicModel>.Bước 4 (TopicAdapter.java $\rightarrow$ onBindViewHolder): MainActivity nhận mảng List, nạp vào TopicAdapter và gắn vào RecyclerView. Adapter tiến hành bốc từng đề tài, nạp vào file dòng item_topic.xml, tự động kiểm tra chữ "Xuất sắc" để đổi màu chữ sang màu Đỏ rực và hiển thị lên màn hình.➕ LUỒNG 2: THÊM MỚI ĐỀ TÀI NGHIÊN CỨU (CREATE LUỒNG)Luồng xử lý khi người dùng muốn đăng ký thêm một đề tài mới vào hệ thống.Bước 1 (MainActivity.java): Người dùng ấn nút + THÊM ĐỀ TÀI NGHIÊN CỨU ở đáy màn hình $\rightarrow$ Kích hoạt hàm showTopicDialog(null). Do tham số truyền vào là null, app hiểu là luồng Thêm mới và hiển thị một form Dialog trống từ file dialog_topic.xml.Bước 2 (Người dùng tương tác): Người dùng gõ các thông tin: Mã đề tài, Tên đề tài, Chủ nhiệm, Kinh phí... vào các ô EditText rồi nhấn nút Lưu Lại.Bước 3 (MainActivity.java $\rightarrow$ Kiểm tra dữ liệu): Code Java bốc các chuỗi chữ người dùng vừa gõ, kiểm tra lệnh if (!id.isEmpty() && !title.isEmpty()). Nếu người dùng nhập đủ, nó sẽ ép kiểu dữ liệu từ chuỗi sang số (Double.parseDouble cho kinh phí) và gọi hàm dbHelper.insertTopic(...).Bước 4 (TopicDBHelper.java $\rightarrow$ SQLite): Hàm insertTopic mở luồng ghi dữ liệu getWritableDatabase(), đóng gói thông tin vào ContentValues rồi bắn lệnh chèn xuống file cứng của điện thoại.Bước 5 (MainActivity.java $\rightarrow$ Làm mới giao diện): Sau khi chèn thành công, MainActivity tự động chạy hàm loadAllData() $\rightarrow$ Gọi SQLite bốc lại danh sách mới và kích hoạt lệnh adapter.notifyDataSetChanged() để RecyclerView vẽ thêm ô đề tài mới ngay trên màn hình.🛠️ LUỒNG 3: CẬP NHẬT HOẶC XÓA BỎ ĐỀ TÀI (UPDATE / DELETE LUỒNG)Luồng xử lý khi người dùng chạm tay vào một dòng đề tài có sẵn trên danh sách để chỉnh sửa hoặc xóa hẳn đi.Bước 1 (TopicAdapter.java): Lắng nghe sự kiện người dùng click vào một ô CardView đề tài thông qua lệnh holder.itemView.setOnClickListener. Sự kiện này bắn ngược đối tượng TopicModel cụ thể của dòng đó về cho MainActivity.Bước 2 (MainActivity.java): Tiếp nhận đối tượng và gọi hàm showTopicDialog(existingModel). Vì tham số truyền vào bây giờ khác null, form Dialog từ file dialog_topic.xml lập tức được đổ đầy dữ liệu cũ của đề tài đó lên màn hình.Bước 3 (Khóa Khóa Chính): Lệnh edtId.setEnabled(false) được kích hoạt để khóa cứng ô Mã đề tài lại, không cho phép người dùng thay đổi ID gốc của SQLite. Đồng thời, nút Xóa đề tài này được hiển thị thêm lên giao diện hộp thoại.Bước 4 (Rẽ nhánh hành động): * Hướng A (Nếu bấm Lưu Lại): MainActivity thu thập các dữ liệu mới sửa từ các ô nhập, gọi hàm dbHelper.updateTopic(...) để bắn lệnh UPDATE sửa đổi xuống SQLite.Hướng B (Nếu bấm Xóa): MainActivity gọi hàm dbHelper.deleteTopic(id) để bắn lệnh DELETE thanh trừng dòng dữ liệu đó ra khỏi bảng SQLite dựa theo mã ID.Bước 5 (Đồng bộ): Cả hai hướng sau khi thực thi xong đều lập tức gọi hàm loadAllData() để ép màn hình chính xóa ô cũ, vẽ lại danh sách mới chính xác theo thời gian thực.🔍 LUỒNG 4: TÌM KIẾM ĐỀ TÀI SONG SONG THEO CÂU 3 (QUERY LUỒNG)Luồng xử lý khi người dùng muốn lọc tìm các đề tài khoa học theo tên thầy cô hoặc theo năm.Bước 1 (MainActivity.java): Người dùng gõ từ khóa vào thanh tìm kiếm trên cùng (Ví dụ gõ chữ: "2026" hoặc "Hiếu") rồi nhấn nút TÌM.Bước 2 (MainActivity.java $\rightarrow$ TopicDBHelper.java): MainActivity kiểm tra nếu ô nhập không trống, nó sẽ gửi chuỗi kí tự đó xuống hàm dbHelper.searchTopics(kw).Bước 3 (TopicDBHelper.java $\rightarrow$ Thuật toán lọc): Cơ sở dữ liệu mở luồng đọc, thực thi câu lệnh SQL kết hợp điều kiện: SELECT * FROM topics WHERE host LIKE ? OR year = ?. Hệ thống truyền chuỗi tìm kiếm vào cả hai vị trí dấu hỏi ?. SQLite tự động rà soát toàn bộ các dòng trong bảng: Dòng nào có cột chủ nhiệm chứa từ khóa hoặc cột năm bằng đúng từ khóa sẽ được bốc riêng ra bỏ vào một mảng List kết quả tìm kiếm.Bước 4 (MainActivity.java $\rightarrow$ RecyclerView): MainActivity nhận mảng kết quả thu gọn từ DB trả về, lệnh cho topicList.clear() để xóa sạch danh sách toàn bộ lớp cũ, nạp mảng thu gọn này vào và gọi adapter.notifyDataSetChanged(). Màn hình lập tức co rút lại, chỉ hiển thị đúng các đề tài khớp với bộ lọc tìm kiếm của người dùng.🗣️ Cách trả lời "Ghi Điểm Tuyệt Đối" khi giải thích luồng:Nếu giảng viên chỉ vào màn hình và hỏi: "Khi em bấm nút Lưu, ứng dụng của em chuyển đổi dữ liệu và chạy qua những đâu?", bạn hãy tự tin trả lời theo đúng chu trình logic này:*"Thưa thầy/cô, khi nút Lưu được kích hoạt, ứng dụng sẽ chạy qua Luồng phản ứng tuần tự. Đầu tiên, MainActivity tiếp nhận sự kiện, thực hiện thu thập dữ liệu thô từ giao diện XML và tiến hành ép kiểu dữ liệu an toàn. Sau đó, dữ liệu được đóng gói vào ContentValues và đẩy xuống tầng vật lý qua hàm của TopicDBHelper.Tại đây, SQLite thực thi lệnh ghi dữ liệu xuống bộ nhớ cứng của thiết bị. Khi tầng dữ liệu báo thành công, tín hiệu được trả ngược về cho MainActivity để kích hoạt hàm làm mới, ra lệnh cho Adapter giải phóng View cũ và đồng bộ lại giao diện hiển thị cho người dùng theo thời gian thực ạ!"*
+
+NHÓM 1: CÁC CÂU HỎI VỀ CƠ SỞ DỮ LIỆU (DATABASE)
+❓ Câu hỏi 1: File TopicDBHelper dùng "để làm gì" và em tạo ra nó "như thế nào"?
+Để làm gì: Để tạo ra file cơ sở dữ liệu vật lý (ScienceTopic.db) lưu trong bộ nhớ máy điện thoại và thực hiện các tác vụ quản trị dữ liệu (Thêm, Sửa, Xóa, Tìm kiếm đề tài). Nếu không có file này, mọi dữ liệu nhập vào app sẽ biến mất ngay khi tắt app.
+
+Làm như thế nào: Em cho class này kế thừa (extends) từ SQLiteOpenHelper của Android. Trong đó, em bắt buộc phải ghi đè (@Override) hai hàm:
+
+onCreate(): Chạy lệnh CREATE TABLE để dựng khung các cột cho bảng dữ liệu khi app vừa cài đặt lần đầu.
+
+onUpgrade(): Dùng để xóa bảng cũ, cập nhật bảng mới khi em muốn nâng cấp cấu trúc cơ sở dữ liệu.
+
+❓ Câu hỏi 2: ContentValues dùng "để làm gì" và dùng nó "như thế nào"?
+Để làm gì: Nó đóng vai trò là một cái "thùng đóng gói dữ liệu" trung gian. Nó dùng để gom các dữ liệu rời rạc từ các ô nhập liệu layout (title, host, budget) thành một gói duy nhất trước khi bắn xuống SQLite.
+
+Làm như thế nào: Em khởi tạo ContentValues v = new ContentValues();, sau đó dùng hàm v.put("tên_cột_trong_DB", giá_trị_java); để nạp dữ liệu theo cặp Khóa - Giá trị. Cuối cùng, truyền cái thùng v này vào lệnh db.insert() hoặc db.update().
+
+❓ Câu hỏi 3: Cursor dùng "để làm gì" và nó hoạt động "như thế nào"?
+Để làm gì: Dùng để đọc và duyệt danh sách dữ liệu trả về sau câu lệnh tra cứu SELECT.
+
+Làm như thế nào: Bản chất Cursor là một Con trỏ bản ghi.
+
+Khi câu lệnh truy vấn chạy xong, dữ liệu trả về dạng một bảng ảo, con trỏ Cursor mặc định đứng ở dòng số 0 (dòng tiêu đề).
+
+Em gọi lệnh c.moveToFirst() để ép con trỏ nhảy xuống dòng dữ liệu đầu tiên.
+
+Em dùng vòng lặp do...while(c.moveToNext()) để lệnh cho con trỏ tự động dịch chuyển tuần tự xuống các dòng tiếp theo cho đến dòng cuối cùng để bóc tách dữ liệu.
+
+🎨 NHÓM 2: CÁC CÂU HỎI VỀ DANH SÁCH (RECYCLERVIEW & ADAPTER)
+❓ Câu hỏi 4: RecyclerView dùng "để làm gì" và nó hoạt động "như thế nào"?
+Để làm gì: Để hiển thị danh sách hàng loạt đề tài khoa học lên màn hình một cách mượt mà, không gây tốn pin hay giật lag máy ảo.
+
+Làm như thế nào: Nó hoạt động theo cơ chế Tái sử dụng View (Recycle). Nó không vẽ hết 100 dòng đề tài cùng lúc. Nó chỉ vẽ khoảng 7-8 dòng vừa khít màn hình. Khi em cuộn màn hình lên, ô trên cùng biến mất sẽ không bị xóa đi, mà hệ thống giữ lại cái khung giao diện đó, chỉ thay ruột dữ liệu của ô tiếp theo dưới đáy vào.
+
+❓ Câu hỏi 5: TopicAdapter dùng "để làm gì" và em viết nó "như thế nào"?
+Để làm gì: Đóng vai trò là cái "máy thông dịch" / "cầu nối". Nó bốc các đối tượng dữ liệu từ mảng Java (List<TopicModel>) chuyển hóa thành các ô giao diện thực tế (item_topic.xml) để nạp vào RecyclerView.
+
+Làm như thế nào: Em viết 3 hàm cốt lõi:
+
+onCreateViewHolder(): Nạp file XML dòng (item_topic.xml) vào code Java để dựng khung cho ô hiển thị.
+
+onBindViewHolder(): Đổ chữ vào các TextView và bắt sự kiện Click chạm tay cho từng dòng đề tài dựa theo vị trí position.
+
+getItemCount(): Đếm tổng số phần tử trong mảng dữ liệu để hệ thống vẽ đúng số lượng ô.
+
+❓ Câu hỏi 6: ViewHolder dùng "để làm gì" và nó chạy "như thế nào"?
+Để làm gì: Để lưu giữ bộ khung giao diện của ô dòng, tránh việc ứng dụng phải gọi đi gọi lại lệnh findViewById() liên tục khi cuộn danh sách, giúp app tăng tốc độ xử lý gấp nhiều lần.
+
+Làm như thế nào: Nó hoạt động bằng cách ánh xạ sẵn các ID giao diện (txt_item_title, txt_item_host) ngay khi ô dòng vừa được khởi tạo lần đầu trong hàm onCreateViewHolder.
+
+🕹️ NHÓM 3: CÁC CÂU HỎI VỀ ĐIỀU KHIỂN VÀ SỰ KIỆN (MAINACTIVITY)
+❓ Câu hỏi 7: Hàm notifyDataSetChanged() dùng "để làm gì" và chạy "như thế nào"?
+Để làm gì: Để làm mới (refresh) màn hình danh sách ngay lập tức sau khi em vừa thực hiện xong một thao tác Thêm, Sửa hoặc Xóa đề tài.
+
+Làm như thế nào: Khi lệnh này được gọi từ MainActivity, nó sẽ phát đi một tín hiệu thông báo cho Adapter. Adapter nhận lệnh sẽ lập tức xóa bỏ các View cũ đang hiển thị và kích hoạt RecyclerView chạy lại hàm onBindViewHolder để vẽ lại danh sách mới theo dữ liệu vừa cập nhật trong SQLite.
+
+❓ Câu hỏi 8: Lệnh LayoutInflater.from().inflate() dùng "để làm gì" và chạy "như thế nào"?
+Để làm gì: Dùng để "bơm căng" một file giao diện tĩnh XML thành một đối tượng View thực tế chạy được trong mã Java (Ví dụ: nạp giao diện dòng danh sách hoặc nạp giao diện cho hộp thoại Pop-up AlertDialog).
+
+Làm như thế nào: Nó đọc file định dạng XML, phân tích cấu trúc các thẻ (LinearLayout, EditText, TextView) rồi chuyển đổi chúng thành các thực thể Java tương ứng để MainActivity có thể dùng lệnh findViewById() ánh xạ dữ liệu.
+
+📡 NHÓM 4: CÁC CÂU HỎI VỀ LIÊN KẾT (INTENT ẨN / GỬI EMAIL - BÀI 10,11,12)
+❓ Câu hỏi 9: Implicit Intent (Intent ẩn) dùng "để làm gì" và dùng "như thế nào"?
+Để làm gì: Dùng để gọi các ứng dụng chuyên trách có sẵn của hệ điều hành Android (như ứng dụng Gmail để gửi thư báo điểm, ứng dụng Tin nhắn hệ thống để nhắn cho phụ huynh) xử lý yêu cầu, giúp ứng dụng của mình cực kỳ nhẹ vì không cần tự viết chức năng gửi mail phức tạp.
+
+Làm như thế nào: Em không chỉ định rõ tên class nào sẽ mở, mà em khai báo Hành động (Intent.ACTION_SENDTO) và Giao thức dữ liệu (Uri.parse("mailto:")). Khi em gọi startActivity(), hệ điều hành Android sẽ tự động mở bảng danh sách các ứng dụng thư điện tử có trên máy (như Gmail) lên để người dùng chọn và tự động điền sẵn nội dung em đã lập trình qua lệnh putExtra().
+
+Khi bạn dùng ngón tay chạm vào một ô đề tài bất kỳ trên danh sách RecyclerView:Mili-giây 1 (item_topic.xml): Bề mặt của dòng (thẻ CardView) tiếp nhận lực chạm vật lý từ ngón tay bạn.Mili-giây 5 (TopicAdapter.java $\rightarrow$ onBindViewHolder()): * Sự kiện holder.itemView.setOnClickListener() được kích hoạt.Adapter định vị được vị trí (position) bạn vừa bấm, lấy ra đối tượng dữ liệu tương ứng: TopicModel m = list.get(position);.Adapter chuyển tiếp đối tượng này về màn hình chính bằng lệnh: listener.onTopicClick(m);.Mili-giây 15 (MainActivity.java $\rightarrow$ onTopicClick()): * Màn hình chính tiếp nhận đối tượng model từ Adapter gửi sang, lập tức chuyển tiếp nó vào hàm điều phối: showTopicDialog(model);.Mili-giây 20 (MainActivity.java $\rightarrow$ showTopicDialog()):Hàm này gọi bộ nạp giao diện LayoutInflater để "bơm căng" file tĩnh dialog_topic.xml thành một cửa sổ View thực tế.Nhánh if (existingModel != null) khớp lệnh $\rightarrow$ Hệ thống tự động gọi các hàm .setText() để bốc dữ liệu cũ điền ngược vào các ô EditText.Lệnh edtId.setEnabled(false); được chạy để khóa cứng ô nhập Mã, chống sửa Khóa chính.Nút Xóa đề tài này (setNeutralButton) được cấu hình và vẽ thêm lên hộp thoại.Mili-giây 50 (Màn hình hiển thị): Một hộp thoại Pop-up chứa đầy đủ thông tin cũ của đề tài hiện ra giữa màn hình trước mắt bạn.➕ KỊCH BẢN 2: TỪ LÚC CLICK NÚT "LƯU LẠI" ĐỂ THÊM MỚI (Luồng Thêm Dữ Liệu)Sau khi bạn mở form trống, điền đầy đủ thông tin đề tài mới và nhấn vào nút LƯU LẠI:Mili-giây 1 (MainActivity.java $\rightarrow$ showTopicDialog()): Trình lắng nghe sự kiện của nút xác nhận .setPositiveButton được kích hoạt.Mili-giây 5 (Thực thi Validate): * Hàm .getText().toString().trim() bốc toàn bộ chữ bạn vừa gõ trong các ô nhập liệu.Hàm if (!id.isEmpty() && !title.isEmpty()) chạy để kiểm tra chống bỏ trống thông tin bắt buộc.Hệ thống chạy bộ bẫy lỗi toán tử 3 ngôi để ép kiểu dữ liệu số an toàn (Double.parseDouble() cho kinh phí, Integer.parseInt() cho năm).Mili-giây 15 (TopicDBHelper.java $\rightarrow$ insertTopic()): * Vì biến existingModel == null, MainActivity ra lệnh gọi hàm dbHelper.insertTopic(...).Hàm này gọi getWritableDatabase() để mở luồng ghi dữ liệu vật lý xuống bộ nhớ máy.Tạo đối tượng ContentValues v, nạp dữ liệu theo cặp Tên cột - Giá trị rồi thực thi lệnh chèn: db.insertWithOnConflict("topics", null, v, ...).Mili-giây 30 (MainActivity.java $\rightarrow$ loadAllData()):Sau khi SQLite báo chèn thành công, code Java quay lại MainActivity và gọi hàm làm mới loadAllData().Mảng tạm dữ liệu bị xóa sạch bằng lệnh topicList.clear().Gọi hàm dbHelper.getAllTopics() để SQLite quét lại toàn bộ bảng từ đầu và nạp danh sách mới vào mảng topicList.Mili-giây 45 (TopicAdapter.java $\rightarrow$ notifyDataSetChanged()):MainActivity phát tín hiệu thông báo làm mới giao diện sang Adapter.Adapter lập tức giải phóng toàn bộ các ô View cũ trên màn hình, chạy lại hàm getItemCount() để tính số dòng mới và gọi lại onBindViewHolder() để vẽ thêm ô đề tài mới tinh lên màn hình điện thoại.🔍 KỊCH BẢN 3: TỪ LÚC GÕ TỪ KHÓA VÀ CLICK NÚT "TÌM" (Luồng Bộ Lọc)Khi bạn gõ tên một thầy cô (Ví dụ: "Hiếu") vào ô tìm kiếm và nhấn nút TÌM:Mili-giây 1 (MainActivity.java $\rightarrow$ onCreate()): Sự kiện btnSearch.setOnClickListener được kích hoạt.Mili-giây 5 (MainActivity.java): Lệnh edtSearch.getText().toString().trim() bốc chuỗi chữ "Hiếu" ra và kiểm tra điều kiện if (!kw.isEmpty()).Mili-giây 10 (TopicDBHelper.java $\rightarrow$ searchTopics()): * MainActivity chuyển tiếp chuỗi "Hiếu" xuống hàm tìm kiếm của Database.Database mở quyền đọc getReadableDatabase().Thực thi câu lệnh SQL: SELECT * FROM topics WHERE host LIKE ? OR year = ?. Hệ thống tự động truyền chuỗi "Hiếu" vào vị trí các dấu ?.Con trỏ Cursor quét qua toàn bộ các dòng trong bảng SQLite ngầm, dòng nào có tên chủ nhiệm chứa chữ "Hiếu" sẽ được bốc riêng ra, đóng gói thành một mảng List kết quả thu gọn để trả ngược về cho MainActivity.Mili-giây 25 (MainActivity.java):Màn hình chính đón nhận mảng kết quả thu gọn.Nó ra lệnh topicList.clear() để xóa sạch toàn bộ danh sách đầy đủ cũ ra khỏi bộ nhớ ram tạm.Nó dùng lệnh topicList.addAll(...) để nạp mảng thu gọn (chỉ chứa các đề tài của thầy Hiếu) vào trong hệ thống.Mili-giây 35 (TopicAdapter.java $\rightarrow$ notifyDataSetChanged()):MainActivity gọi lệnh thông báo cập nhật sang Adapter.RecyclerView lập tức co rút giao diện lại, ẩn hết các đề tài của người khác đi và chỉ vẽ ra màn hình đúng các đề tài thỏa mãn điều kiện tìm kiếm.

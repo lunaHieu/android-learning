@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp"
+    tools:context="hieu.nv.nguyenvanhieu_128.ui.MainActivity">
+
+    <LinearLayout
+        android:id="@+id/layout_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="8dp">
+
+        <EditText
+            android:id="@+id/edt_search_keyword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Tìm tên theo chủ nhiệm hoặc năm"
+            android:minHeight="48dp"
+            android:inputType="text"
+            android:textSize="14sp"/>
+
+        <Button
+            android:id="@+id/btn_search_topic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TÌM"
+            android:backgroundTint="#00796B"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_topics"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_search_bar"
+        android:layout_above="@+id/btn_open_add_dialog" />
+
+    <Button
+        android:id="@+id/btn_open_add_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:text="+ THÊM ĐỀ TÀI NGHIÊN CỨU"
+        android:textStyle="bold"
+        android:backgroundTint="#F44336"
+        android:textColor="#F44336"/>
+</RelativeLayout>
