@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">VanHieu_lab01</string>
+    <string name="content">"Android - Application Component:\n
+        1. Activity                      \n
+        2. Service                      \n
+        3. ContentProvider                      \n
+        4. BroadcastReceive      "</string>
+</resources>
