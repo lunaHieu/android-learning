@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/edt_med_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mã mặt hàng (Ví dụ: MS03)"
+        android:minHeight="48dp"/>
+
+    <EditText
+        android:id="@+id/edt_med_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên hàng hóa + Giá tiền"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_med_expiry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Hạn sử dụng (YYYY-MM-DD)"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_med_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhóm mặt hàng (Vị trí lưu kho)"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_med_qty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số lượng nhập kho"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp"/>
+</LinearLayout>
