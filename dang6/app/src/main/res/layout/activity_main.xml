@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BIỂU ĐỒ TỶ LỆ THU / CHI THỰC TẾ:"
+        android:textStyle="bold"
+        android:textColor="#212121"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/layout_chart_container"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:orientation="horizontal"
+        android:background="#E0E0E0"
+        android:weightSum="100"
+        android:layout_marginBottom="16dp">
+
+        <View
+            android:id="@+id/view_bar_income"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:background="#4CAF50" />
+
+        <View
+            android:id="@+id/view_bar_expense"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:background="#F44336" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/edt_finance_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên khoản (Ví dụ: Tiền lương, Ăn tối)"
+        android:minHeight="48dp"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/edt_finance_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số tiền (VND)"
+        android:minHeight="48dp"
+        android:inputType="numberDecimal"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btn_add_income"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="+ THÊM THU"
+            android:backgroundTint="#4CAF50"
+            android:layout_marginEnd="4dp"/>
+
+        <Button
+            android:id="@+id/btn_add_expense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="- THÊM CHI"
+            android:backgroundTint="#F44336"
+            android:layout_marginStart="4dp"/> </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#BDBDBD" android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QUẢN LÝ TIỀN GỬI TIẾT KIỆM:"
+        android:textStyle="bold"
+        android:textColor="#212121"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btn_open_saving_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="MỞ SỔ TIẾT KIỆM &amp; TÍNH LÃI"
+        android:backgroundTint="#FF9800"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_transactions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dp"/>
+
+</LinearLayout>

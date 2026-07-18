@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/edt_bank_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên ngân hàng"
+        android:minHeight="48dp"
+        android:inputType="text"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_saving_capital"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số tiền gửi ban đầu (VND)"
+        android:minHeight="48dp"
+        android:inputType="number"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_saving_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Lãi suất năm % (Ví dụ: 6.5)"
+        android:minHeight="48dp"
+        android:inputType="numberDecimal"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_saving_months"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số tháng gửi (Ví dụ: 12)"
+        android:minHeight="48dp"
+        android:inputType="number"/>
+</LinearLayout>
