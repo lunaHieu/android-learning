@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="THÊM VIDEO MỚI"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:textColor="#009688"/>
+
+    <EditText
+        android:id="@+id/edt_video_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập tên/tiêu đề video"
+        android:minHeight="48dp"
+        android:layout_marginBottom="12dp"
+        android:importantForAutofill="no"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/edt_video_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Thể loại (ví dụ: Phim, Ca nhạc)"
+        android:minHeight="48dp"
+        android:layout_marginBottom="16dp"
+        android:importantForAutofill="no"
+        android:inputType="text" />
+</LinearLayout>
