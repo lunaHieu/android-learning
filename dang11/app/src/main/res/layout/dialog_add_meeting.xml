@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/edt_meet_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tiêu đề cuộc họp"
+        android:minHeight="48dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_meet_attendees"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email thành viên (Ngăn cách bằng dấu phẩy)"
+        android:minHeight="48dp"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_meet_host"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Người chủ trì cuộc họp"
+        android:minHeight="48dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_meet_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Thời gian họp (Ví dụ: 14:00 - 28/05)"
+        android:minHeight="48dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/edt_meet_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Địa điểm tổ chức họp"
+        android:minHeight="48dp"/>
+</LinearLayout>
