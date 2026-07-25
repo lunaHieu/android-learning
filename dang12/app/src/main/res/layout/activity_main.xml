@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:id="@+id/layout_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="8dp">
+        <Button
+            android:id="@+id/btn_filter_todo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CHƯA LÀM"
+            android:textSize="11sp"
+            android:backgroundTint="#E53935"/>
+        <Button
+            android:id="@+id/btn_filter_doing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ĐANG LÀM"
+            android:textSize="11sp"
+            android:backgroundTint="#FB8C00"
+            android:layout_marginHorizontal="4dp"/>
+        <Button
+            android:id="@+id/btn_filter_done"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="HOÀN THÀNH"
+            android:textSize="11sp"
+            android:backgroundTint="#4CAF50"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_jobs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_filter"
+        android:layout_above="@+id/btn_open_add_job" />
+
+    <Button
+        android:id="@+id/btn_open_add_job"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:text="+ THIẾT LẬP NHIỆM VỤ MỚI"
+        android:textStyle="bold"
+        android:backgroundTint="#00796B"/>
+</RelativeLayout>
